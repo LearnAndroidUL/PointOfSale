@@ -59,12 +59,24 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
-            case R.id.action_settings:
-                startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
-                return true;
             case R.id.action_reset:
+                final Item mSavedItem = mCurrentItem;
                 mCurrentItem = new Item();
                 showCurrentItem();
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_removeone,Snackbar.LENGTH_LONG);
+                snackbar.setAction(R.string.action_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCurrentItem = mSavedItem;
+                        showCurrentItem();
+                        Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_restored,Snackbar.LENGTH_LONG).show();
+                    }
+                });
+                snackbar.show();
+                return true;
+
+            case R.id.action_settings:
+                startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
                 return true;
         };
         return super.onOptionsItemSelected(item);
