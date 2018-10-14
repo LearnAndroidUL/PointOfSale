@@ -10,8 +10,12 @@
     <string name="quantity_format">Quantity: %d</string>
     <string name="date_format">Delivery date: %s</string>
     <string name="name_start">Name</string>
+    <string name="name_dialog">What do you want to buy?</string>
+    <string name="name_hint">Item name</string>
     <string name="quantity_start">Quantity</string>
+    <string name="quantity_dialog">Quantity</string>
     <string name="date_start">Delivery date</string>
+    <string name="date_dialog">Delivery date</string>
     <string name="confirmation_dialog_removeall">Are you sure you want to remove all items?</string>
     <string name="confirmation_snack_removeone">Item removed</string>
     <string name="confirmation_snack_restored">Item restored</string>
