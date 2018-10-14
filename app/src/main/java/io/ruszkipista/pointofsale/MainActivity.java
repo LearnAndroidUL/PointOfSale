@@ -17,12 +17,14 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mNameTextView, mQuantityTextView, mDateTextView;
     private Item mCurrentItem;
+    private ArrayList<Item> mItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 String itemName = nameEditTextView.getText().toString();
                 int itemQuantity = Integer.parseInt(quantityEditTextView.getText().toString());
                 mCurrentItem = new Item(itemName,itemQuantity,deliveryDate);
+//              add new item to list
+                mItems.add(mCurrentItem);
                 showCurrentItem();
             }
         });
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         switch (menuItem.getItemId()){
             case R.id.action_reset:
                 final Item mSavedItem = mCurrentItem;
+                mItems.remove(mCurrentItem);
                 mCurrentItem = new Item();
                 showCurrentItem();
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_removeone,Snackbar.LENGTH_LONG);
@@ -103,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         mCurrentItem = mSavedItem;
+//                      re-add restored item to list
+                        mItems.add(mCurrentItem);
                         showCurrentItem();
                         Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_restored,Snackbar.LENGTH_LONG).show();
                     }
@@ -110,10 +117,18 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
                 return true;
 
+            case R.id.action_search:
+                showDialogItemList();
+                return true;
+
             case R.id.action_settings:
                 startActivity(new Intent(Settings.ACTION_LOCALE_SETTINGS));
                 return true;
         };
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void showDialogItemList() {
+
     }
 }
