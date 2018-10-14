@@ -1,5 +1,6 @@
 package io.ruszkipista.pointofsale;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
                 addItem();
             }
         });
+
+//      fill items list with 3 entries
+        mItems.add(new Item("Eaxample 1", 10, new GregorianCalendar()));
+        mItems.add(new Item("Eaxample 2", 15, new GregorianCalendar()));
+        mItems.add(new Item("Eaxample 3", 30, new GregorianCalendar()));
     }
 
     private void addItem() {
@@ -129,6 +135,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showDialogItemList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dialog_itemlist_title);
+        builder.setItems(getNames(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mCurrentItem = mItems.get(which);
+                showCurrentItem();
+            }
+        });
 
+        builder.create().show();
+    }
+
+    private String[] getNames() {
+        String[] names = new String[mItems.size()];
+        for (int i=0;i<mItems.size();i++){
+            names[i] = mItems.get(i).getName();
+        }
+        return names;
     }
 }

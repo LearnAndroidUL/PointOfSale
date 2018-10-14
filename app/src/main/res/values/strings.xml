@@ -17,6 +17,7 @@
     <string name="quantity_dialog">Quantity</string>
     <string name="date_start">Delivery date</string>
     <string name="date_dialog">Delivery date</string>
+    <string name="dialog_itemlist_title">Choose an item</string>
     <string name="confirmation_dialog_removeall">Are you sure you want to remove all items?</string>
     <string name="confirmation_snack_removeone">Item removed</string>
     <string name="confirmation_snack_restored">Item restored</string>
