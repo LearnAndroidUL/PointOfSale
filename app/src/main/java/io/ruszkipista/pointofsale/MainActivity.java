@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
         mItems.add(new Item("Eaxample 1", 10, new GregorianCalendar()));
         mItems.add(new Item("Eaxample 2", 15, new GregorianCalendar()));
         mItems.add(new Item("Eaxample 3", 30, new GregorianCalendar()));
+
+        mCurrentItem = getNewItem();
+        showCurrentItem();
+    }
+
+    private Item getNewItem() {
+        return new Item("- - - -",0, new GregorianCalendar());
     }
 
     private void addItem() {
@@ -104,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (menuItem.getItemId()){
-            case R.id.action_reset:
+            case R.id.action_remove:
                 final Item mSavedItem = mCurrentItem;
                 mItems.remove(mCurrentItem);
-                mCurrentItem = new Item();
+                mCurrentItem = getNewItem();
                 showCurrentItem();
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_removeone,Snackbar.LENGTH_LONG);
                 snackbar.setAction(R.string.action_undo, new View.OnClickListener() {
@@ -123,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
                 return true;
 
+            case R.id.action_removeall:
+                showDialogRemoveAll();
+                return true;
+
             case R.id.action_search:
                 showDialogItemList();
                 return true;
@@ -132,6 +143,22 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         };
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void showDialogRemoveAll() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.action_remove);
+        builder.setMessage(R.string.confirmation_dialog_removeall);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mItems.clear();
+                mCurrentItem = getNewItem();
+                showCurrentItem();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel,null);
+        builder.create().show();
     }
 
     private void showDialogItemList() {

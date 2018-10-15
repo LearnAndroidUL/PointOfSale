@@ -14,7 +14,7 @@ public class Item {
     private GregorianCalendar mDeliveryDate;
 
     public Item() {
-        mName = "Nothing";
+        mName = "";
         mQuantity = 0;
         mDeliveryDate = new GregorianCalendar();
     }
@@ -23,10 +23,6 @@ public class Item {
         mName = name;
         mQuantity = quantity;
         mDeliveryDate = deliveryDate;
-    }
-
-    public static Item getDefaultItem() {
-        return new Item("Earplugs", 5, new GregorianCalendar());
     }
 
     public String getName() {
