@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 showCurrentItem();
             }
         });
-
+        builder.setNegativeButton(android.R.string.cancel,null);
         builder.create().show();
     }
 
