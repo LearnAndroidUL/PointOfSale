@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addItem();
+                modifyItem(false);
             }
         });
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         return new Item("- - - -",0, new GregorianCalendar());
     }
 
-    private void addItem() {
+    private void modifyItem(boolean isEdit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_additem,null,false);
         builder.setView(view);
@@ -109,11 +109,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem contextItem) {
         switch (contextItem.getItemId()) {
             case R.id.action_context_edit:
+                modifyItem(true);
                 Toast.makeText(this,"TODO: edit item",Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.action_context_remove:
-                Toast.makeText(this,"TODO: remove item",Toast.LENGTH_SHORT).show();
+                mItems.remove(mCurrentItem);
+                mCurrentItem = getNewItem();
+                showCurrentItem();
+                Toast.makeText(this,"removed item",Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onContextItemSelected(contextItem);
