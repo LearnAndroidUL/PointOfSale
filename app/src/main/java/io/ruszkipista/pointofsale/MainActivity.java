@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modifyItem(false);
+                inputItem(false);
             }
         });
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         return new Item("- - - -",0, new GregorianCalendar());
     }
 
-    private void modifyItem(boolean isEdit) {
+    private void inputItem(final boolean isEdit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_additem,null,false);
         builder.setView(view);
@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         final EditText quantityEditTextView = view.findViewById(R.id.edit_quantity);
         final CalendarView deliveryDateCalendarView = view.findViewById(R.id.calendar_view);
         final GregorianCalendar deliveryDate = new GregorianCalendar();
+        if (isEdit) {
+            nameEditTextView.setText(mCurrentItem.getName());
+            quantityEditTextView.setText( Integer.toString(mCurrentItem.getQuantity()));
+            deliveryDateCalendarView.setDate(mCurrentItem.getDeliveryDateTime());
+        }
 
         deliveryDateCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -89,9 +94,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String itemName = nameEditTextView.getText().toString();
                 int itemQuantity = Integer.parseInt(quantityEditTextView.getText().toString());
-                mCurrentItem = new Item(itemName,itemQuantity,deliveryDate);
-//              add new item to list
-                mItems.add(mCurrentItem);
+                if (isEdit){
+//                  update current item with changed details
+                    mCurrentItem.setName(itemName);
+                    mCurrentItem.setQuantity(itemQuantity);
+                    mCurrentItem.setDeliveryDate(deliveryDate);
+                } else {
+//                  create new item with captured details
+                    mCurrentItem = new Item(itemName, itemQuantity, deliveryDate);
+//                  add new item to list
+                    mItems.add(mCurrentItem);
+                }
                 showCurrentItem();
             }
         });
@@ -109,15 +122,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem contextItem) {
         switch (contextItem.getItemId()) {
             case R.id.action_context_edit:
-                modifyItem(true);
+                inputItem(true);
                 Toast.makeText(this,"TODO: edit item",Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.action_context_remove:
-                mItems.remove(mCurrentItem);
-                mCurrentItem = getNewItem();
-                showCurrentItem();
-                Toast.makeText(this,"removed item",Toast.LENGTH_SHORT).show();
+                removeCurrentItem();
                 return true;
         }
         return super.onContextItemSelected(contextItem);
@@ -136,23 +146,8 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (menuItem.getItemId()){
-            case R.id.action_options_remove:
-                final Item mSavedItem = mCurrentItem;
-                mItems.remove(mCurrentItem);
-                mCurrentItem = getNewItem();
-                showCurrentItem();
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_removeone,Snackbar.LENGTH_LONG);
-                snackbar.setAction(R.string.action_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mCurrentItem = mSavedItem;
-//                      re-add restored item to list
-                        mItems.add(mCurrentItem);
-                        showCurrentItem();
-                        Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_restored,Snackbar.LENGTH_LONG).show();
-                    }
-                });
-                snackbar.show();
+            case R.id.action_options_removeone:
+                removeCurrentItem();
                 return true;
 
             case R.id.action_options_removeall:
@@ -168,6 +163,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         };
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void removeCurrentItem() {
+        final Item mSavedItem = mCurrentItem;
+        mItems.remove(mCurrentItem);
+        mCurrentItem = getNewItem();
+        showCurrentItem();
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_removeone,Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.action_undo, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentItem = mSavedItem;
+//                      re-add restored item to list
+                mItems.add(mCurrentItem);
+                showCurrentItem();
+                Snackbar.make(findViewById(R.id.coordinator_layout),R.string.confirmation_snack_restored,Snackbar.LENGTH_LONG).show();
+            }
+        });
+        snackbar.show();
     }
 
     private void showDialogRemoveAll() {

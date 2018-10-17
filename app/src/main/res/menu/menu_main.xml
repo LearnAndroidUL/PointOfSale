@@ -9,7 +9,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_options_remove"
+        android:id="@+id/action_options_removeone"
         android:orderInCategory="100"
         android:title="@string/action_remove"
         android:icon="@android:drawable/ic_menu_revert"
